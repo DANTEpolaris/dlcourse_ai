@@ -18,7 +18,7 @@ class TwoLayerNet:
         """
         self.reg = reg
         # TODO Create necessary layers
-        raise Exception("Not implemented!)"
+        raise Exception("Not implemented!")
 
     def compute_loss_and_gradients(self, X, y):
         """

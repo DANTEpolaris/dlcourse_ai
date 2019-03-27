@@ -53,17 +53,23 @@ class Param:
 class ReLULayer:
     def __init__(self):
         pass
+        # self.X = None
 
     def forward(self, X):
         # TODO: Implement forward pass
         # Hint: you'll need to save some information about X
         # to use it later in the backward pass
+        # self.X = X
+        # display("forward before")
+        # display(X)
+        # display("forward after")
+        # # display(X * (X > 0))
+        return X * (X > 0)
         raise Exception("Not implemented!")
 
     def backward(self, d_out):
         """
         Backward pass
-
         Arguments:
         d_out, np array (batch_size, num_features) - gradient
            of loss function with respect to output
@@ -74,8 +80,12 @@ class ReLULayer:
         """
         # TODO: Implement backward pass
         # Your final implementation shouldn't have any loops
+        # display("backward before")
+        # display(d_out)
+        # display("backward after")
+        # display(1 * (d_out > 0))
+        return 1 * (d_out > 0)
         raise Exception("Not implemented!")
-        return d_result
 
     def params(self):
         # ReLU Doesn't have any parameters
