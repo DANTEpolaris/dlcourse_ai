@@ -1,6 +1,6 @@
 import numpy as np
 
-from layers import FullyConnectedLayer, ReLULayer, softmax_with_cross_entropy, l2_regularization
+from layers import FullyConnectedLayer, ReLULayer, softmax_with_cross_entropy, l2_regularization, softmax
 
 
 class TwoLayerNet:
@@ -53,11 +53,12 @@ class TwoLayerNet:
         hidden_res_backward = self.relu.backward(hidden_res_backward)
         self.fcl1.backward(hidden_res_backward)
 
-
         # After that, implement l2 regularization on all params
         # Hint: self.params() is useful again!
-
-        # raise Exception("Not implemented!")
+        for param in self.params().values():
+            reg_loss, reg_grad = l2_regularization(param.value, self.reg)
+            loss += reg_loss
+            param.grad += reg_grad   # raise Exception("Not implemented!")
 
         return loss
 
@@ -75,8 +76,9 @@ class TwoLayerNet:
         # Hint: some of the code of the compute_loss_and_gradients
         # can be reused
         pred = np.zeros(X.shape[0], np.int)
-
-        raise Exception("Not implemented!")
+        pred = np.argmax(softmax(self.fcl2.forward(self.relu.forward(self.fcl1.forward(X)))), 1)
+        display(pred)
+        # raise Exception("Not implemented!")
         return pred
 
     def params(self):

@@ -157,8 +157,8 @@ class FullyConnectedLayer:
 
     def forward(self, X):
         # TODO: Implement forward pass
-        self.X = Param(X)
-        return np.dot(self.X.value, self.W.value) + self.B.value
+        self.X = np.copy(X)
+        return np.dot(X, self.W.value) + self.B.value
         # Your final implementation shouldn't have any loops
         raise Exception("Not implemented!")
 
@@ -184,8 +184,8 @@ class FullyConnectedLayer:
         # It should be pretty similar to linear classifier from
         # the previous assignment
         d_result = np.dot(d_out, self.W.value.T)
-        d_w = np.dot(self.X.value.T, d_out)
-        d_b = np.array([np.sum(d_out, axis=0)])
+        d_w = np.dot(self.X.T, d_out)
+        d_b = d_out.sum(axis=0)[None, :]
         self.W.grad += d_w
         self.B.grad += d_b
         return d_result
