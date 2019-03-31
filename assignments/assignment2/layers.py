@@ -18,89 +18,75 @@ def l2_regularization(W, reg_strength):
     # raise Exception("Not implemented!")
     # TODO: implement l2 regularization and gradient
     # Your final implementation shouldn't have any loops
-    loss = reg_strength * np.sum(np.square(W))
+    loss = reg_strength * np.sum(W ** 2)
     grad = 2 * W * reg_strength
     return loss, grad
 
 
 def softmax(predictions):
     '''
-        Computes probabilities from scores
-
-        Arguments:
-          predictions, np array, shape is either (N) or (batch_size, N) -
-            classifier output
-
-        Returns:
-          probs, np array of the same shape as predictions -
-            probability for every class, 0..1
-        '''
+    Computes probabilities from scores
+    Arguments:
+      predictions, np array, shape is either (N) or (batch_size, N) -
+        classifier output
+    Returns:
+      probs, np array of the same shape as predictions -
+        probability for every class, 0..1
+    '''
     # TODO implement softmax
+    x = predictions.copy()
     if len(predictions.shape) == 1:
-        predictions -= np.max(predictions)
+        x -= np.max(x)
+        return np.exp(x) / np.sum(np.exp(x))
     else:
-        predictions -= np.max(predictions, 0)
-    probs = np.exp(predictions) / np.sum(np.exp(predictions), 0)
-    return probs
-    # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+        x -= np.max(x, axis=1, keepdims=True)
+        return np.exp(x) / np.sum(np.exp(x), axis=1, keepdims=True)
 
 
 def cross_entropy_loss(probs, target_index):
     '''
     Computes cross-entropy loss
-
     Arguments:
       probs, np array, shape is either (N) or (batch_size, N) -
         probabilities for every class
       target_index: np array of int, shape is (1) or (batch_size) -
         index of the true class for given sample(s)
-
     Returns:
       loss: single value
     '''
-    # TODO implement cross-entropys
-    if isinstance(target_index, int):
-        return -math.log(probs[target_index])
-    loss = np.zeros(probs[0].shape)
-    if len(target_index.shape) == 1:
-        for col in range(probs.shape[1]):
-            loss[col] = -math.log(probs[target_index[col]][col])
+    # TODO implement cross-entropy
+    if len(probs.shape) == 1:
+        return -np.log(probs[target_index])
     else:
-        for col in range(probs.shape[1]):
-            loss[col] = -math.log(probs[target_index[col][0]][col])
-    return np.mean(loss)
-    # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+        n_samples = probs.shape[0]
+        return np.mean(-np.log(probs[np.arange(n_samples), target_index]))
 
-
-def softmax_with_cross_entropy(predictions, target_index):
-    '''
+def softmax_with_cross_entropy(preds, target_index):
+    """
     Computes softmax and cross-entropy loss for model predictions,
     including the gradient
-
     Arguments:
-      predictions, np array, shape is either (N) or (batch_size, N) -
+      predictions, np array, shape is either (N) or (N, batch_size) -
         classifier output
       target_index: np array of int, shape is (1) or (batch_size) -
         index of the true class for given sample(s)
-
     Returns:
       loss, single value - cross-entropy loss
       dprediction, np array same shape as predictions - gradient of predictions by loss value
-    '''
-    # TODO implement softmax with cross-entropy
-    dprediction = softmax(np.copy(predictions))
-    loss = cross_entropy_loss(dprediction, target_index)
-    if isinstance(target_index, int):
+    """
+    # TODO: Copy from the previous assignment
+    probes = softmax(preds)
+    loss = cross_entropy_loss(probes, target_index)
+    dprediction = probes.copy()
+
+    if len(preds.shape) == 1:
         dprediction[target_index] -= 1
     else:
-        for col in range(target_index.shape[0]):
-            dprediction[target_index[col], col] -= 1
-        dprediction = dprediction / target_index.shape[0]
+        n_samples = probes.shape[0]
+        dprediction[np.arange(n_samples), target_index] -= 1
+        dprediction /= n_samples
+
     return loss, dprediction
-    # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
 
 
 class Param:
@@ -124,7 +110,7 @@ class ReLULayer:
         # to use it later in the backward pass
         self.x = X
         return np.maximum(X, 0)
-        raise Exception("Not implemented!")
+        # raise Exception("Not implemented!")
 
     def backward(self, d_out):
         """

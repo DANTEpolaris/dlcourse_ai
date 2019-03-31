@@ -48,8 +48,8 @@ class TwoLayerNet:
         hidden_res_forward = self.fcl1.forward(X)
         hidden_res_forward = self.relu.forward(hidden_res_forward)
         output = self.fcl2.forward(hidden_res_forward)
-        loss, dprediction = softmax_with_cross_entropy(output.T, y)
-        hidden_res_backward = self.fcl2.backward(dprediction.T)
+        loss, dprediction = softmax_with_cross_entropy(output, y)
+        hidden_res_backward = self.fcl2.backward(dprediction)
         hidden_res_backward = self.relu.backward(hidden_res_backward)
         self.fcl1.backward(hidden_res_backward)
 
@@ -77,7 +77,6 @@ class TwoLayerNet:
         # can be reused
         pred = np.zeros(X.shape[0], np.int)
         pred = np.argmax(softmax(self.fcl2.forward(self.relu.forward(self.fcl1.forward(X)))), 1)
-        display(pred)
         # raise Exception("Not implemented!")
         return pred
 
