@@ -186,3 +186,6 @@ class MaxPoolingLayer:
 
     def params(self):
         return {}
+
+class Flattener:
+    pass
