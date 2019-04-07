@@ -212,10 +212,6 @@ class ConvolutionalLayer:
 
         out_height = height - (self.filter_size - 1) + self.padding * 2
         out_width = width - (self.filter_size - 1) + self.padding * 2
-        display("out_height")
-        display(out_height)
-        display("out_width")
-        display(out_width)
         # TODO: Implement forward pass
         # Hint: setup variables that hold the result
         # and one x/y location at a time in the loop below
@@ -225,29 +221,9 @@ class ConvolutionalLayer:
         for y in range(out_height):
             for x in range(out_width):
                 # TODO: Implement forward pass for specific location
-                pass
-                display("y")
-                display(y)
-                display("x")
-                display(x)
-                # display("X[:, y, x, :]")
-                # display(X[:, y:y+self.filter_size, x:x+self.filter_size, :])
-                # display("sum")
-                # display(np.sum(X[:, y:y+self.filter_size, x:x+self.filter_size, :], axis=(1, 2)))
-                # display("dot")
-                # display(np.dot(X[:, y:y+self.filter_size, x:x+self.filter_size, :], self.W.value[]))
-                display("X")
-                display(X)
-                X_res = np.reshape(X, (batch_size, self.filter_size * self.filter_size * channels))
-                display("reshaped")
-                display(X_res)
-                display("W")
-                display(self.W.value)
-                W_res = np.reshape(self.W.value, (self.filter_size * self.filter_size * channels, self.out_channels))
-                display("reshaped")
-                display(W_res)
-                display("dot")
-                display(np.dot(X_res, W_res))
+                # X_res = np.zeros(X, (batch_size, self.filter_size * self.filter_size * channels))
+                X_res = np.reshape(X[:, y : y + self.filter_size, x : x + self.filter_size, :], (batch_size, self.filter_size * self.filter_size * channels))
+                W_res = np.reshape(self.W.value[:, y : y + self.filter_size, x : x + self.filter_size, :], (self.filter_size * self.filter_size * channels, self.out_channels))
                 self.X[:, y, x, :] = np.dot(X_res, W_res) + self.B.value
         return self.X
         # raise Exception("Not implemented!")
