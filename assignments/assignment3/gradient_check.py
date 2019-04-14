@@ -40,6 +40,8 @@ def check_gradient(f, x, delta=1e-5, tol=1e-4):
             print("Gradients are different at %s. Analytic: %2.5f, Numeric: %2.5f" % (
                 ix, analytic_grad_at_ix, numeric_grad_at_ix))
             return False
+        print("At %s. Analytic: %2.5f, Numeric: %2.5f" % (
+            ix, analytic_grad_at_ix, numeric_grad_at_ix))
         it.iternext()
     print("Gradient check passed!")
     return True
